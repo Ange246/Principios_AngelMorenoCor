@@ -15,8 +15,10 @@ public class Persona {
   //
   // Constructors
   //
-  public Persona () { };
-  
+  public Persona(String nombre, int edad) {
+    this.nombre = nombre;
+    this.edad = edad;
+  }
   //
   // Methods
   //
@@ -66,9 +68,7 @@ public class Persona {
    * @param        nombre
    * @param        edad
    */
-  public void Persona(String nombre, int edad)
-  {
-  }
+  
 
 
   /**
@@ -81,9 +81,5 @@ public class Persona {
   /**
    * @return       int
    */
-  public int getEdad()
-  {
-  }
-
 
 }

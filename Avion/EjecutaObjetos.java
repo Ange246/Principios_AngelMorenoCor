@@ -1,9 +1,9 @@
 
 
 /**
- * Class Main
+ * Class EjecutaObjetos
  */
-public class Main {
+public class EjecutaObjetos {
 
   //
   // Fields
@@ -13,7 +13,7 @@ public class Main {
   //
   // Constructors
   //
-  public Main () { };
+  public EjecutaObjetos () { };
   
   //
   // Methods
@@ -29,15 +29,14 @@ public class Main {
   //
 
   /**
-   * @param        args
    */
   public static void main(String[] args)
   {
-  Persona p1 = new Persona("Angel", 19);
+  Avion av1 = new Avion("Construye un avion");
   
+  av1.acelerar();
+  av1.elevarse();
   
-  System.out.println(p1.getNombre());
-  System.out.println(p1.getEdad());
   }
 
 

@@ -1,0 +1,1293 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{setspace}
+\usepackage{amsmath}
+
+\geometry{
+  top=2.5cm,
+  bottom=2.5cm,
+  left=3cm,
+  right=2.5cm
+}
+
+% Colores temáticos de Brawl Stars
+\definecolor{bsYellow}{RGB}{255, 213, 0}
+\definecolor{bsOrange}{RGB}{255, 140, 0}
+\definecolor{bsDark}{RGB}{30, 30, 60}
+\definecolor{bsBlue}{RGB}{0, 120, 215}
+\definecolor{bsPurple}{RGB}{130, 0, 200}
+\definecolor{bsGreen}{RGB}{0, 180, 80}
+\definecolor{codeGray}{RGB}{40, 44, 52}
+\definecolor{codeLight}{RGB}{248, 248, 248}
+
+% Configuración de listings (código)
+\lstdefinestyle{javastyle}{
+  backgroundcolor=\color{codeLight},
+  commentstyle=\color{gray}\itshape,
+  keywordstyle=\color{bsBlue}\bfseries,
+  stringstyle=\color{bsGreen},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{gray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single,
+  rulecolor=\color{bsOrange},
+  framerule=1.5pt,
+  language=Java
+}
+\lstset{style=javastyle}
+
+% Cabecera y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{bsDark}{\textbf{Brawl Stars} -- Patrones de Dise\~no}}
+\fancyhead[R]{\textcolor{bsOrange}{\textbf{Angel Jes\'us Moreno Corona}}}
+\fancyfoot[C]{\textcolor{gray}{\thepage}}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{bsOrange}\leaders\hrule height \headrulewidth\hfill}}
+
+% Estilo de títulos de sección
+\titleformat{\section}[block]
+  {\Large\bfseries\color{bsDark}}
+  {\colorbox{bsYellow}{\textcolor{bsDark}{\thesection}}}
+  {0.5em}{}[\color{bsOrange}\titlerule]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{bsDark}}
+  {\textcolor{bsOrange}{\thesubsection}}
+  {0.5em}{}
+
+% Caja de patrón
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{patronbox}[2][]{
+  enhanced,
+  colback=bsDark!5,
+  colframe=bsOrange,
+  fonttitle=\bfseries\color{white},
+  title={#2},
+  coltitle=white,
+  attach boxed title to top left={yshift=-2mm, xshift=5mm},
+  boxed title style={colback=bsOrange, colframe=bsDark, sharp corners},
+  #1
+}
+
+% Caja de nota
+\newtcolorbox{notabox}{
+  enhanced,
+  colback=bsYellow!20,
+  colframe=bsYellow,
+  fonttitle=\bfseries,
+  title={Nota},
+  sharp corners
+}
+
+\begin{document}
+
+% ============================================================
+%  PORTADA
+% ============================================================
+\begin{titlepage}
+  \pagecolor{bsDark}
+  \color{white}
+  \centering
+  \vspace*{2cm}
+
+  % Línea decorativa superior
+  {\color{bsYellow}\rule{\linewidth}{3pt}}
+  \vspace{0.5cm}
+
+  {\fontsize{40}{48}\selectfont\bfseries\color{bsYellow} BRAWL STARS}\\[0.3cm]
+  {\color{bsOrange}\rule{\linewidth}{1.5pt}}
+  \vspace{0.8cm}
+
+  {\fontsize{22}{28}\selectfont\bfseries Patrones de Dise\~no de Software}\\[0.3cm]
+  {\large Aplicados al Proyecto Brawl Stars}\\[0.5cm]
+
+  {\color{bsOrange}\rule{8cm}{1pt}}
+  \vspace{1.5cm}
+
+  % Recuadro de datos
+  \begin{tcolorbox}[
+    enhanced,
+    width=12cm,
+    colback=bsDark!80!black,
+    colframe=bsYellow,
+    arc=5pt,
+    boxrule=2pt
+  ]
+    \centering
+    {\Large\bfseries\color{bsYellow} Alumno}\\[0.5cm]
+    {\LARGE\bfseries\color{white} Angel Jes\'us Moreno Corona}\\[1cm]
+    {\color{bsOrange}\rule{8cm}{0.5pt}}\\[0.5cm]
+    {\large\color{gray} Materia:} {\large\color{white} Dise\~no de Software}\\[0.3cm]
+    {\large\color{gray} Fecha:} {\large\color{white} Mayo 2026}
+  \end{tcolorbox}
+
+  \vfill
+
+  {\color{bsYellow}\rule{\linewidth}{3pt}}
+  \vspace{0.3cm}
+  {\small\color{gray} Patrones: Singleton $\bullet$ Factory Method $\bullet$ Abstract Factory $\bullet$ Builder $\bullet$ Observer $\bullet$ Strategy $\bullet$ Decorator $\bullet$ Facade}
+\end{titlepage}
+\pagecolor{white}\color{black}
+
+% ============================================================
+%  ÍNDICE
+% ============================================================
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+%  INTRODUCCIÓN
+% ============================================================
+\section{Introducci\'on}
+
+\begin{tcolorbox}[colback=bsDark!8, colframe=bsDark, arc=4pt]
+Mi documento presenta el an\'alisis y aplicaci\'on de \textbf{ocho patrones de dise\~no} de software sobre el proyecto \textbf{Brawl Stars}, una aplicaci\'on desarrollada con \textit{Spring Boot} (backend), \textit{Flutter} (frontend m\'ovil/web) y una base de datos \textit{PostgreSQL} alojada en Aiven.
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+El proyecto consiste en una red social tem\'atica donde los jugadores pueden publicar, reaccionar y comentar sobre \textbf{brawlers} (personajes del juego Brawl Stars de Supercell). El sistema implementa autenticaci\'on JWT, roles de usuario y operaciones CRUD completas.
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw=bsOrange, fill=bsDark!10, rounded corners, minimum width=2.5cm, minimum height=1cm] (flutter) at (0,0) {\textbf{Flutter}};
+  \node[draw=bsBlue, fill=bsBlue!10, rounded corners, minimum width=2.5cm, minimum height=1cm] (spring) at (4,0) {\textbf{Spring Boot}};
+  \node[draw=bsGreen, fill=bsGreen!10, rounded corners, minimum width=2.5cm, minimum height=1cm] (pg) at (8,0) {\textbf{PostgreSQL}};
+  \draw[->, thick, color=bsOrange] (flutter) -- node[above]{\small HTTP/JWT} (spring);
+  \draw[->, thick, color=bsBlue] (spring) -- node[above]{\small JPA/SQL} (pg);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+Los patrones analizados pertenecen a las tres categor\'ias cl\'asicas del libro \textit{Gang of Four}:
+
+\begin{center}
+\begin{tabular}{|>{\centering\bfseries}p{3.5cm}|p{8cm}|}
+\hline
+\rowcolor{bsDark!15} Categor\'ia & Patrones Aplicados \\
+\hline
+\textcolor{bsGreen}{Creacionales} & Singleton, Factory Method, Abstract Factory, Builder \\
+\hline
+\textcolor{bsBlue}{Estructurales} & Decorator, Facade \\
+\hline
+\textcolor{bsPurple}{De Comportamiento} & Observer, Strategy \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+%  PATRÓN 1: SINGLETON
+% ============================================================
+\newpage
+\section{Patr\'on Singleton (Creacional)}
+
+\begin{patronbox}{Definici\'on}
+El patr\'on \textbf{Singleton} garantiza que una clase tenga \textit{una sola instancia} y proporciona un punto de acceso global a ella. Se utiliza para recursos que deben compartirse en toda la aplicaci\'on.
+\end{patronbox}
+
+\subsection{Problema que resuelve}
+
+En el proyecto Brawl Stars, la conexi\'on a la base de datos es un recurso costoso. Si cada operaci\'on creara una nueva conexi\'on, se agota\'ar\'ian los recursos del servidor r\'apidamente.
+
+\subsection{Implementaci\'on en el proyecto}
+
+El archivo \texttt{DatabaseConnection.java} encontrado en la carpeta \texttt{creational/singleton/} implementa este patr\'on directamente:
+
+\begin{lstlisting}[caption={DatabaseConnection.java -- Singleton de conexi\'on a base de datos}]
+public class DatabaseConnection {
+
+    // Instancia única del Singleton
+    private static DatabaseConnection instance;
+
+    // Objeto conexión
+    private Connection connection;
+
+    // Datos de conexión (credenciales reales del proyecto)
+    private static final String URL = "jdbc:mysql://localhost:3306/mi_base";
+    private static final String USER = "angelCor";
+    private static final String PASSWORD = "angelMor";
+
+    // Constructor privado: impide instanciación externa
+    private DatabaseConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Conexión establecida");
+        } catch (Exception e) {
+            throw new RuntimeException("Error al conectar a la base de datos", e);
+        }
+    }
+
+    // Método de acceso global -- solo crea la instancia UNA vez
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    // Obtiene la conexión activa
+    public Connection getConnection() {
+        return connection;
+    }
+}
+\end{lstlisting}
+
+En el backend Spring Boot, este patr\'on se extiende a nivel de framework: los \textbf{Beans de Spring} (servicios, repositorios, controladores) son singletons por defecto:
+
+\begin{lstlisting}[caption={JwtUtils.java -- Bean Singleton gestionado por Spring}]
+@Component  // Spring lo crea UNA sola vez y lo reutiliza
+public class JwtUtils {
+    @Value("${bezkoder.app.jwtSecret}")
+    private String jwtSecret;
+
+    @Value("${bezkoder.app.jwtExpirationMs}")
+    private int jwtExpirationMs;
+
+    public String generateJwtToken(Authentication authentication) {
+        UserDetailsImpl userPrincipal =
+            (UserDetailsImpl) authentication.getPrincipal();
+
+        return Jwts.builder()
+            .setSubject((userPrincipal.getUsername()))
+            .setIssuedAt(new Date())
+            .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+            .signWith(key(), SignatureAlgorithm.HS256)
+            .compact();
+    }
+}
+\end{lstlisting}
+
+\subsection{Diagrama}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \node[draw=bsOrange, fill=bsDark!10, rounded corners, minimum width=5cm, minimum height=0.8cm,font=\bfseries] (cls) at (0,0) {DatabaseConnection};
+  \node[draw=gray, fill=gray!10, rounded corners, minimum width=3cm, minimum height=0.6cm] (r1) at (-3,-2) {TweetController};
+  \node[draw=gray, fill=gray!10, rounded corners, minimum width=3cm, minimum height=0.6cm] (r2) at (0,-2) {UserController};
+  \node[draw=gray, fill=gray!10, rounded corners, minimum width=3cm, minimum height=0.6cm] (r3) at (3,-2) {AuthService};
+  \draw[->] (r1) -- node[left,font=\tiny]{getInstance()} (cls);
+  \draw[->] (r2) -- (cls);
+  \draw[->] (r3) -- node[right,font=\tiny]{getInstance()} (cls);
+  \node[draw=bsGreen, fill=bsGreen!10, rounded corners, minimum width=3.5cm, minimum height=0.6cm,font=\small] (pg) at (0,-3.5) {PostgreSQL / MySQL};
+  \draw[->] (cls) -- (pg);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Ventajas en el proyecto}
+\begin{itemize}
+  \item Evita m\'ultiples conexiones innecesarias a la base de datos.
+  \item El \texttt{JwtUtils} se crea una sola vez: todos los controladores comparten la misma instancia del validador de tokens.
+  \item Reduce el consumo de memoria en el servidor Render.
+\end{itemize}
+
+% ============================================================
+%  PATRÓN 2: FACTORY METHOD
+% ============================================================
+\newpage
+\section{Patr\'on Factory Method (Creacional)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Factory Method} define una interfaz para crear objetos, pero deja que las subclases decidan qu\'e clase instanciar. Permite \textit{delegar la creaci\'on} de objetos a m\'etodos especializados.
+\end{patronbox}
+
+\subsection{Problema que resuelve}
+
+El proyecto maneja diferentes tipos de respuestas HTTP seg\'un la operaci\'on (login exitoso, error de autenticaci\'on, datos de brawler). En lugar de construir estas respuestas directamente en los controladores, el Factory Method centraliza su creaci\'on.
+
+\subsection{Implementaci\'on en el proyecto}
+
+Los \textbf{DTOs de respuesta} actúan como productos del factory. Spring utiliza internamente este patr\'on para los \textit{ResponseEntity}:
+
+\begin{lstlisting}[caption={TweetResponseDTO.java -- Objeto producto de la factory}]
+public class TweetResponseDTO {
+    private Long id;
+    private String nombre;        // Nombre del Brawler
+    private String ataquePrincipal;
+    private String rareza;
+    private String urlImagen;
+    private int cantidadLikes;
+    private boolean likedByCurrentUser;
+
+    // Constructor de la factory
+    public TweetResponseDTO(Long id, String nombre, String ataquePrincipal,
+                            String rareza, String urlImagen,
+                            int cantidadLikes, boolean likedByCurrentUser) {
+        this.id = id;
+        this.nombre = nombre;
+        this.ataquePrincipal = ataquePrincipal;
+        this.rareza = rareza;
+        this.urlImagen = urlImagen;
+        this.cantidadLikes = cantidadLikes;
+        this.likedByCurrentUser = likedByCurrentUser;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={AuthController.java -- Uso del patrón Factory para respuestas}]
+@PostMapping("/signin")
+public ResponseEntity<?> authenticateUser(
+        @RequestBody LoginRequest loginRequest) {
+
+    Authentication authentication = authManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+            loginRequest.getUsername(),
+            loginRequest.getPassword())
+    );
+
+    String jwt = jwtUtils.generateJwtToken(authentication);
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) authentication.getPrincipal();
+
+    // Factory: crea el objeto de respuesta según el tipo de usuario
+    return ResponseEntity.ok(new JwtResponse(jwt,
+        userDetails.getId(),
+        userDetails.getUsername(),
+        userDetails.getEmail(),
+        roles));  // <-- JwtResponse es el "producto" de la factory
+}
+\end{lstlisting}
+
+\subsection{Tipos de productos en el proyecto}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{bsDark!15}\textbf{Factory} & \textbf{Producto} & \textbf{Uso} \\
+\hline
+ResponseEntity & JwtResponse & Login exitoso \\
+\hline
+ResponseEntity & MessageResponse & Mensajes de error/\'exito \\
+\hline
+ResponseEntity & TweetResponseDTO & Datos de brawlers \\
+\hline
+ResponseEntity & UserResponseDTO & Datos del usuario \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+%  PATRÓN 3: OBSERVER
+% ============================================================
+\newpage
+\section{Patr\'on Observer (Comportamiento)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Observer} define una dependencia uno-a-muchos entre objetos: cuando un objeto cambia de estado, todos sus dependientes son notificados autom\'aticamente.
+\end{patronbox}
+
+\subsection{Problema que resuelve}
+
+En Brawl Stars (la app), cuando un usuario da \textbf{like} a un brawler o agrega un \textbf{comentario}, m\'ultiples partes del sistema deben reaccionar: la base de datos se actualiza, la UI muestra el cambio, y eventualmente podr\'ia notificarse a otros usuarios.
+
+\subsection{Implementaci\'on en el proyecto}
+
+El sistema de reacciones (\texttt{TweetReaction}) sigue el patr\'on Observer. La entidad \texttt{Tweet} (brawler) es el \textbf{sujeto observado}:
+
+\begin{lstlisting}[caption={Tweet.java -- El sujeto observado con su lista de likes}]
+@Entity
+@Table(name = "tweets")
+public class Tweet {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    private String nombre;         // Nombre del brawler
+
+    @NotBlank
+    private String ataquePrincipal;
+
+    @NotBlank
+    private String rareza;
+
+    @NotBlank
+    private String urlImagen;
+
+    // Lista de observadores (usuarios que dieron like)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+      name = "tweet_likes",
+      joinColumns = @JoinColumn(name = "tweet_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> likes = new HashSet<>();
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={TweetReactionController.java -- El controlador notifica cambios}]
+@RestController
+@RequestMapping("/api/reactions")
+public class TweetReactionController {
+
+    @Autowired
+    private TweetRepository tweetRepo;
+
+    @PostMapping("/{tweetId}/like")
+    public ResponseEntity<?> toggleLike(
+            @PathVariable Long tweetId,
+            Authentication auth) {
+
+        Tweet tweet = tweetRepo.findById(tweetId)
+            .orElseThrow(() -> new RuntimeException("Brawler no encontrado"));
+
+        UserDetailsImpl userDetails =
+            (UserDetailsImpl) auth.getPrincipal();
+
+        // "Notificar" el cambio: agregar/quitar el like
+        if (tweet.getLikes().contains(userDetails.getId())) {
+            tweet.getLikes().remove(userDetails.getId()); // quitar like
+        } else {
+            tweet.getLikes().add(userDetails.getId());    // agregar like
+        }
+
+        tweetRepo.save(tweet); // Persistir el nuevo estado
+
+        return ResponseEntity.ok(new MessageResponse(
+            "Reacci\'on actualizada correctamente"));
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={EReaction.java -- Tipos de reacciones disponibles}]
+public enum EReaction {
+    LIKE,
+    LOVE,
+    HAHA,
+    WOW,
+    SAD,
+    ANGRY
+}
+\end{lstlisting}
+
+\subsection{Flujo del Observer en la app}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+  \node[draw=bsOrange, fill=bsDark!10, rounded corners, text width=3cm, align=center, minimum height=1cm,font=\small] (tweet) at (0,0) {\textbf{Tweet (Brawler)}\\\textit{Sujeto}};
+  \node[draw=bsBlue, fill=bsBlue!10, rounded corners, text width=2.5cm, align=center, minimum height=0.8cm,font=\small] (o1) at (-4,-2.5) {TweetController\\\textit{Observer 1}};
+  \node[draw=bsGreen, fill=bsGreen!10, rounded corners, text width=2.5cm, align=center, minimum height=0.8cm,font=\small] (o2) at (0,-2.5) {Flutter UI\\\textit{Observer 2}};
+  \node[draw=bsPurple, fill=bsPurple!10, rounded corners, text width=2.5cm, align=center, minimum height=0.8cm,font=\small] (o3) at (4,-2.5) {Database\\\textit{Observer 3}};
+  \draw[->, thick, bsOrange] (tweet) -- node[left,font=\tiny]{like()} (o1);
+  \draw[->, thick, bsOrange] (tweet) -- node[right,font=\tiny]{notify()} (o2);
+  \draw[->, thick, bsOrange] (tweet) -- node[right,font=\tiny]{save()} (o3);
+\end{tikzpicture}
+\end{center}
+
+% ============================================================
+%  PATRÓN 4: STRATEGY
+% ============================================================
+\newpage
+\section{Patr\'on Strategy (Comportamiento)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Strategy} define una familia de algoritmos, los encapsula y los hace intercambiables. Permite que el algoritmo var\'ie independientemente de los clientes que lo usan.
+\end{patronbox}
+
+\subsection{Problema que resuelve}
+
+El sistema de autenticaci\'on necesita diferentes \textbf{estrategias de seguridad}: validar por JWT, validar por rol, o permitir acceso p\'ublico. En lugar de poner toda la l\'ogica en un solo lugar, cada estrategia se encapsula por separado.
+
+\subsection{Implementaci\'on en el proyecto}
+
+Spring Security implementa el patr\'on Strategy nativamente. \texttt{WebSecurityConfig.java} define qu\'e estrategia de autenticaci\'on usar para cada ruta:
+
+\begin{lstlisting}[caption={WebSecurityConfig.java -- Definici\'on de estrategias de seguridad}]
+@Configuration
+@EnableMethodSecurity
+public class WebSecurityConfig {
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;  // Estrategia de carga de usuario
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;  // Estrategia de error 401
+
+    // Estrategia de filtrado JWT
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .exceptionHandling(
+                e -> e.authenticationEntryPoint(unauthorizedHandler)
+            )
+            .sessionManagement(
+                s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authorizeHttpRequests(auth -> auth
+                // Estrategia 1: Acceso público (sin autenticación)
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/test/**").permitAll()
+                // Estrategia 2: Requiere JWT válido
+                .anyRequest().authenticated()
+            );
+
+        // Aplica la estrategia JWT antes de cualquier verificación
+        http.addFilterBefore(authenticationJwtTokenFilter(),
+            UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={UserDetailsServiceImpl.java -- Estrategia de carga de usuarios}]
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Autowired
+    UserRepository userRepository;
+
+    // Estrategia: buscar usuario en base de datos por username
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException(
+                "Usuario no encontrado: " + username));
+
+        return UserDetailsImpl.build(user);
+    }
+}
+\end{lstlisting}
+
+\subsection{Estrategias de autenticaci\'on en el proyecto}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{bsDark!15}\textbf{Estrategia} & \textbf{Clase} & \textbf{Aplicaci\'on} \\
+\hline
+JWT Token & AuthTokenFilter & Rutas protegidas \\
+\hline
+Acceso p\'ublico & permitAll() & /api/auth/** \\
+\hline
+Carga de usuario & UserDetailsServiceImpl & Login \\
+\hline
+Manejo de error & AuthEntryPointJwt & Error 401 \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+%  PATRÓN 5: DECORATOR
+% ============================================================
+\newpage
+\section{Patr\'on Decorator (Estructural)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Decorator} adjunta responsabilidades adicionales a un objeto de forma din\'amica. Ofrece una alternativa flexible a la herencia para extender funcionalidad.
+\end{patronbox}
+
+\subsection{Problema que resuelve}
+
+En el proyecto, los datos de un \textbf{Tweet} (brawler) necesitan enriquecerse antes de enviarse al cliente Flutter: se a\~nade el conteo de likes, si el usuario actual ya dio like, y los comentarios. El Decorator agrega estos datos sin modificar la entidad original.
+
+\subsection{Implementaci\'on en el proyecto}
+
+El \textbf{TweetResponseDTO} act\'ua como un decorator del \textbf{Tweet} original, a\~nadiendo informaci\'on adicional:
+
+\begin{lstlisting}[caption={Tweet.java -- Entidad base (sin decorar)}]
+@Entity
+@Table(name = "tweets")
+public class Tweet {
+    private Long id;
+    private String nombre;
+    private String ataquePrincipal;
+    private String rareza;
+    private String urlImagen;
+    private Set<User> likes = new HashSet<>();
+    // Solo datos crudos de la base de datos
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={TweetResponseDTO.java -- Decorator: Tweet enriquecido}]
+public class TweetResponseDTO {
+    // Datos originales del Tweet
+    private Long id;
+    private String nombre;
+    private String ataquePrincipal;
+    private String rareza;
+    private String urlImagen;
+
+    // Datos DECORADOS (agregados dinámicamente)
+    private int cantidadLikes;           // Calculado en tiempo real
+    private boolean likedByCurrentUser;  // Personalizado por usuario
+    private List<String> comentarios;    // Enriquecido con comentarios
+
+    // Constructor que "decora" el tweet original
+    public static TweetResponseDTO fromTweet(
+            Tweet tweet, Long currentUserId) {
+
+        TweetResponseDTO dto = new TweetResponseDTO();
+        dto.id = tweet.getId();
+        dto.nombre = tweet.getNombre();
+        dto.ataquePrincipal = tweet.getAtaquePrincipal();
+        dto.rareza = tweet.getRareza();
+        dto.urlImagen = tweet.getUrlImagen();
+
+        // Decoración: agregar conteo y estado de like
+        dto.cantidadLikes = tweet.getLikes().size();
+        dto.likedByCurrentUser = tweet.getLikes().stream()
+            .anyMatch(u -> u.getId().equals(currentUserId));
+
+        return dto;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={TweetController.java -- Aplica la decoraci\'on al recuperar brawlers}]
+@GetMapping
+public ResponseEntity<List<TweetResponseDTO>> getAllTweets(
+        Authentication auth) {
+
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) auth.getPrincipal();
+
+    List<Tweet> tweets = tweetRepo.findAll();
+
+    // Decorar cada tweet con informaci\'on adicional
+    List<TweetResponseDTO> response = tweets.stream()
+        .map(t -> TweetResponseDTO.fromTweet(t, userDetails.getId()))
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(response);
+}
+\end{lstlisting}
+
+% ============================================================
+%  PATRÓN 6: FACADE
+% ============================================================
+\newpage
+\section{Patr\'on Facade (Estructural)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Facade} proporciona una interfaz simplificada a un subsistema complejo. Oculta la complejidad interna y expone solo lo necesario al cliente.
+\end{patronbox}
+
+\subsection{Problema que resuelve}
+
+El proceso de \textbf{registro e inicio de sesi\'on} involucra m\'ultiples subsistemas: validaci\'on de datos, verificaci\'on de usuario existente, cifrado de contrase\~na, asignaci\'on de rol, generaci\'on de JWT y respuesta HTTP. El \textit{AuthService} hace de Facade, simplificando todo esto en una sola llamada.
+
+\subsection{Implementaci\'on en el proyecto}
+
+\begin{lstlisting}[caption={AuthService.java -- Facade del sistema de autenticaci\'on}]
+@Service
+public class AuthService {
+
+    @Autowired AuthenticationManager authManager;
+    @Autowired UserRepository userRepo;
+    @Autowired RoleRepository roleRepo;
+    @Autowired PasswordEncoder encoder;
+    @Autowired JwtUtils jwtUtils;
+
+    // Facade: oculta toda la complejidad del registro
+    public MessageResponse registerUser(SignupRequest request) {
+
+        // 1. Validar si username ya existe
+        if (userRepo.existsByUsername(request.getUsername())) {
+            return new MessageResponse("Error: El usuario ya existe");
+        }
+
+        // 2. Validar si email ya existe
+        if (userRepo.existsByEmail(request.getEmail())) {
+            return new MessageResponse("Error: El email ya está en uso");
+        }
+
+        // 3. Crear el usuario con contraseña encriptada
+        User user = new User(
+            request.getUsername(),
+            request.getEmail(),
+            encoder.encode(request.getPassword())  // BCrypt
+        );
+
+        // 4. Asignar rol por defecto
+        Role userRole = roleRepo.findByName(ERole.ROLE_USER)
+            .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        user.setRoles(Set.of(userRole));
+
+        // 5. Guardar en base de datos
+        userRepo.save(user);
+
+        return new MessageResponse("Usuario registrado exitosamente");
+    }
+
+    // Facade: oculta toda la complejidad del login
+    public JwtResponse loginUser(LoginRequest request) {
+        Authentication auth = authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getUsername(), request.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        String jwt = jwtUtils.generateJwtToken(auth);
+
+        UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
+
+        return new JwtResponse(jwt, user.getId(),
+            user.getUsername(), user.getEmail(), user.getRoles());
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={AuthController.java -- El cliente solo ve la Facade simple}]
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    @Autowired
+    AuthService authService;  // Solo conoce la Facade
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(
+            @RequestBody SignupRequest req) {
+        // Una sola llamada oculta toda la complejidad
+        return ResponseEntity.ok(authService.registerUser(req));
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(
+            @RequestBody LoginRequest req) {
+        // Una sola llamada oculta: validación, JWT, roles...
+        return ResponseEntity.ok(authService.loginUser(req));
+    }
+}
+\end{lstlisting}
+
+\subsection{Subsistemas ocultos por la Facade}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \node[draw=bsOrange, fill=bsOrange!20, rounded corners, minimum width=2.5cm, minimum height=1cm,font=\small\bfseries] (flutter) at (0,0) {Flutter App};
+  \node[draw=bsDark, fill=bsDark!10, rounded corners, minimum width=2.5cm, minimum height=1cm,font=\small\bfseries] (facade) at (4,0) {AuthService\\\small(Facade)};
+  \draw[->, thick] (flutter) -- node[above]{\small signup/login} (facade);
+
+  \node[draw=bsBlue, fill=bsBlue!10, rounded corners, text width=2cm, align=center, minimum height=0.7cm,font=\scriptsize] (s1) at (7.5,1.5) {AuthManager};
+  \node[draw=bsGreen, fill=bsGreen!10, rounded corners, text width=2cm, align=center, minimum height=0.7cm,font=\scriptsize] (s2) at (7.5,0.5) {UserRepository};
+  \node[draw=bsPurple, fill=bsPurple!10, rounded corners, text width=2cm, align=center, minimum height=0.7cm,font=\scriptsize] (s3) at (7.5,-0.5) {PasswordEncoder};
+  \node[draw=bsOrange, fill=bsOrange!10, rounded corners, text width=2cm, align=center, minimum height=0.7cm,font=\scriptsize] (s4) at (7.5,-1.5) {JwtUtils};
+
+  \draw[->, gray] (facade) -- (s1);
+  \draw[->, gray] (facade) -- (s2);
+  \draw[->, gray] (facade) -- (s3);
+  \draw[->, gray] (facade) -- (s4);
+\end{tikzpicture}
+\end{center}
+
+% ============================================================
+%  PATRÓN 7: ABSTRACT FACTORY
+% ============================================================
+\newpage
+\section{Patr\'on Abstract Factory (Creacional)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Abstract Factory} proporciona una interfaz para crear \textit{familias de objetos relacionados} sin especificar sus clases concretas. Es una f\'abrica de f\'abricas.
+\end{patronbox}
+
+\begin{tcolorbox}[colback=bsYellow!15, colframe=bsYellow!80!black, arc=3pt, title={\textbf{Nota de implementaci\'on}}, coltitle=black, fonttitle=\bfseries]
+Este patr\'on fue \textbf{propuesto como mejora} al proyecto Brawl Stars. Aunque el c\'odigo actual no lo implementa expl\'icitamente, se ide\'o c\'omo podr\'ia integrarse en el sistema de notificaciones y creaci\'on de perfiles de brawler para distintas plataformas (m\'ovil y web).
+\end{tcolorbox}
+
+\subsection{Problema que resuelve}
+
+El proyecto necesita crear \textbf{familias de objetos de respuesta} que var\'ian seg\'un la plataforma del cliente (Flutter m\'ovil vs. Flutter web). Un brawler mostrado en m\'ovil tiene una resoluci\'on de imagen diferente, campos resumidos y paginaci\'on distinta respecto a la vista web. El Abstract Factory centraliza esta l\'ogica.
+
+\subsection{Implementaci\'on propuesta}
+
+La idea es tener una \textbf{f\'abrica abstracta} \texttt{BrawlerResponseFactory} con dos implementaciones concretas: una para m\'ovil y otra para web.
+
+\begin{lstlisting}[caption={BrawlerResponseFactory.java -- Interfaz de la Abstract Factory}]
+// Interfaz de la Abstract Factory
+public interface BrawlerResponseFactory {
+
+    // Crea la respuesta de un brawler individual
+    BrawlerDTO crearBrawlerDTO(Tweet tweet, Long userId);
+
+    // Crea la respuesta de una lista de brawlers (paginada)
+    BrawlerListDTO crearListaDTO(List<Tweet> tweets,
+                                 Long userId, int pagina);
+
+    // Crea la respuesta de comentarios asociados
+    ComentarioDTO crearComentarioDTO(TweetComment comentario);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={MobileBrawlerFactory.java -- Factory concreta para m\'ovil}]
+// Producto concreto: versión móvil (imágenes comprimidas, datos resumidos)
+@Component("mobileFactory")
+public class MobileBrawlerFactory implements BrawlerResponseFactory {
+
+    @Override
+    public BrawlerDTO crearBrawlerDTO(Tweet tweet, Long userId) {
+        BrawlerDTO dto = new BrawlerDTO();
+        dto.setId(tweet.getId());
+        dto.setNombre(tweet.getNombre());
+        dto.setAtaque(tweet.getAtaquePrincipal());
+        dto.setRareza(tweet.getRareza());
+
+        // Móvil: URL de imagen en baja resolución (thumbnail)
+        dto.setUrlImagen(tweet.getUrlImagen() + "?size=150x150");
+        dto.setLikes(tweet.getLikes().size());
+        dto.setLikedByUser(tweet.getLikes().stream()
+            .anyMatch(u -> u.getId().equals(userId)));
+
+        return dto;
+    }
+
+    @Override
+    public BrawlerListDTO crearListaDTO(List<Tweet> tweets,
+                                        Long userId, int pagina) {
+        // Móvil: paginación de 10 elementos
+        int inicio = pagina * 10;
+        List<BrawlerDTO> items = tweets.subList(
+            Math.min(inicio, tweets.size()),
+            Math.min(inicio + 10, tweets.size())
+        ).stream()
+         .map(t -> crearBrawlerDTO(t, userId))
+         .collect(Collectors.toList());
+
+        return new BrawlerListDTO(items, tweets.size(), pagina, 10);
+    }
+
+    @Override
+    public ComentarioDTO crearComentarioDTO(TweetComment c) {
+        // Móvil: comentario resumido (máx 100 chars)
+        String texto = c.getContenido();
+        if (texto.length() > 100)
+            texto = texto.substring(0, 97) + "...";
+        return new ComentarioDTO(c.getId(), c.getAutor(), texto);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={WebBrawlerFactory.java -- Factory concreta para web}]
+// Producto concreto: versión web (imágenes HD, datos completos)
+@Component("webFactory")
+public class WebBrawlerFactory implements BrawlerResponseFactory {
+
+    @Override
+    public BrawlerDTO crearBrawlerDTO(Tweet tweet, Long userId) {
+        BrawlerDTO dto = new BrawlerDTO();
+        dto.setId(tweet.getId());
+        dto.setNombre(tweet.getNombre());
+        dto.setAtaque(tweet.getAtaquePrincipal());
+        dto.setRareza(tweet.getRareza());
+        dto.setBiografia(tweet.getBiografia());    // Campo extra solo en web
+
+        // Web: URL de imagen en alta resolución
+        dto.setUrlImagen(tweet.getUrlImagen() + "?size=800x600");
+        dto.setLikes(tweet.getLikes().size());
+        dto.setLikedByUser(tweet.getLikes().stream()
+            .anyMatch(u -> u.getId().equals(userId)));
+
+        return dto;
+    }
+
+    @Override
+    public BrawlerListDTO crearListaDTO(List<Tweet> tweets,
+                                        Long userId, int pagina) {
+        // Web: paginación de 25 elementos
+        int inicio = pagina * 25;
+        List<BrawlerDTO> items = tweets.subList(
+            Math.min(inicio, tweets.size()),
+            Math.min(inicio + 25, tweets.size())
+        ).stream()
+         .map(t -> crearBrawlerDTO(t, userId))
+         .collect(Collectors.toList());
+
+        return new BrawlerListDTO(items, tweets.size(), pagina, 25);
+    }
+
+    @Override
+    public ComentarioDTO crearComentarioDTO(TweetComment c) {
+        // Web: comentario completo con fecha y edición
+        return new ComentarioDTO(c.getId(), c.getAutor(),
+            c.getContenido(), c.getFecha(), c.isEditado());
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={TweetController.java -- Uso del Abstract Factory seg\'un plataforma}]
+@RestController
+@RequestMapping("/api/tweets")
+public class TweetController {
+
+    @Autowired
+    @Qualifier("mobileFactory")
+    private BrawlerResponseFactory mobileFactory;
+
+    @Autowired
+    @Qualifier("webFactory")
+    private BrawlerResponseFactory webFactory;
+
+    @GetMapping
+    public ResponseEntity<?> getAllBrawlers(
+            @RequestHeader(value = "X-Platform",
+                           defaultValue = "mobile") String platform,
+            @RequestParam(defaultValue = "0") int pagina,
+            Authentication auth) {
+
+        UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
+        List<Tweet> tweets = tweetRepo.findAll();
+
+        // Seleccionar la factory según la plataforma del cliente
+        BrawlerResponseFactory factory =
+            platform.equals("web") ? webFactory : mobileFactory;
+
+        // La factory crea la familia de objetos correcta
+        BrawlerListDTO respuesta =
+            factory.crearListaDTO(tweets, user.getId(), pagina);
+
+        return ResponseEntity.ok(respuesta);
+    }
+}
+\end{lstlisting}
+
+\subsection{Diagrama de la Abstract Factory}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.82]
+  % Abstract Factory
+  \node[draw=bsDark, fill=bsDark!10, rounded corners, text width=4cm, align=center, minimum height=1cm, font=\small\bfseries] (af) at (0,0)
+    {$\langle\langle$interfaz$\rangle\rangle$\\BrawlerResponseFactory};
+
+  % Concrete Factories
+  \node[draw=bsBlue, fill=bsBlue!10, rounded corners, text width=3.2cm, align=center, minimum height=0.9cm, font=\small] (mob) at (-3.5,-2.5)
+    {MobileBrawlerFactory};
+  \node[draw=bsGreen, fill=bsGreen!10, rounded corners, text width=3.2cm, align=center, minimum height=0.9cm, font=\small] (web) at (3.5,-2.5)
+    {WebBrawlerFactory};
+
+  \draw[->, dashed, thick] (mob) -- (af);
+  \draw[->, dashed, thick] (web) -- (af);
+
+  % Products
+  \node[draw=bsOrange, fill=bsOrange!10, rounded corners, text width=2.2cm, align=center, font=\scriptsize] (p1) at (-5,-4.5) {BrawlerDTO\\(móvil)};
+  \node[draw=bsOrange, fill=bsOrange!10, rounded corners, text width=2.2cm, align=center, font=\scriptsize] (p2) at (-2,-4.5) {BrawlerListDTO\\(móvil, 10 elem)};
+  \node[draw=bsPurple, fill=bsPurple!10, rounded corners, text width=2.2cm, align=center, font=\scriptsize] (p3) at (2,-4.5) {BrawlerDTO\\(web, HD)};
+  \node[draw=bsPurple, fill=bsPurple!10, rounded corners, text width=2.2cm, align=center, font=\scriptsize] (p4) at (5,-4.5) {BrawlerListDTO\\(web, 25 elem)};
+
+  \draw[->, gray] (mob) -- (p1);
+  \draw[->, gray] (mob) -- (p2);
+  \draw[->, gray] (web) -- (p3);
+  \draw[->, gray] (web) -- (p4);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Ventajas de implementar este patr\'on}
+\begin{itemize}
+  \item Permite soportar nuevas plataformas (p.ej., \textit{tablet} o \textit{smart TV}) sin modificar los controladores.
+  \item Garantiza consistencia: todos los objetos de una familia son compatibles entre s\'i.
+  \item La selecci\'on de factory se hace din\'amicamente seg\'un el header \texttt{X-Platform} de la petici\'on HTTP.
+\end{itemize}
+
+% ============================================================
+%  PATRÓN 8: BUILDER
+% ============================================================
+\newpage
+\section{Patr\'on Builder (Creacional)}
+
+\begin{patronbox}{Definici\'on}
+El \textbf{Builder} separa la \textit{construcci\'on} de un objeto complejo de su \textit{representaci\'on}, permitiendo que el mismo proceso de construcci\'on pueda crear diferentes representaciones.
+\end{patronbox}
+
+\begin{tcolorbox}[colback=bsYellow!15, colframe=bsYellow!80!black, arc=3pt, title={\textbf{Nota de implementaci\'on}}, coltitle=black, fonttitle=\bfseries]
+Este patr\'on fue \textbf{propuesto como mejora} al proyecto Brawl Stars. Se ide\'o para resolver el problema de crear objetos \texttt{Brawler} y \texttt{User} con muchos campos opcionales, evitando constructores con decenas de par\'ametros (el llamado \textit{telescoping constructor antipattern}).
+\end{tcolorbox}
+
+\subsection{Problema que resuelve}
+
+Al registrar un nuevo \textbf{brawler} en la app, el objeto puede tener muchos campos opcionales: biograf\'ia, precio en gemas, tipo de recarga, estadísticas de da\~no, etc. Sin Builder, el constructor se vuelve un caos con m\'ultiples sobrecargas. Con Builder, cada campo se agrega de forma fluida y legible.
+
+\subsection{Implementaci\'on propuesta}
+
+\begin{lstlisting}[caption={Brawler.java -- La entidad con Builder interno}]
+@Entity
+@Table(name = "brawlers")
+public class Brawler {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Campos obligatorios
+    private String nombre;
+    private String rareza;
+    private String ataquePrincipal;
+    private String urlImagen;
+
+    // Campos opcionales
+    private String biografia;
+    private Double precioGemas;
+    private String tipoRecarga;
+    private Integer danioMaximo;
+    private Integer vidaMaxima;
+    private String superHabilidad;
+    private String gadget;
+    private String starPower;
+
+    // Constructor privado: solo el Builder puede instanciarlo
+    private Brawler(Builder builder) {
+        this.nombre          = builder.nombre;
+        this.rareza          = builder.rareza;
+        this.ataquePrincipal = builder.ataquePrincipal;
+        this.urlImagen       = builder.urlImagen;
+        this.biografia       = builder.biografia;
+        this.precioGemas     = builder.precioGemas;
+        this.tipoRecarga     = builder.tipoRecarga;
+        this.danioMaximo     = builder.danioMaximo;
+        this.vidaMaxima      = builder.vidaMaxima;
+        this.superHabilidad  = builder.superHabilidad;
+        this.gadget          = builder.gadget;
+        this.starPower       = builder.starPower;
+    }
+
+    // ===== CLASE BUILDER INTERNA =====
+    public static class Builder {
+
+        // Campos obligatorios
+        private final String nombre;
+        private final String rareza;
+        private final String ataquePrincipal;
+        private final String urlImagen;
+
+        // Campos opcionales con valores por defecto
+        private String  biografia    = "";
+        private Double  precioGemas  = 0.0;
+        private String  tipoRecarga  = "Golpes";
+        private Integer danioMaximo  = 0;
+        private Integer vidaMaxima   = 0;
+        private String  superHabilidad = "";
+        private String  gadget       = "";
+        private String  starPower    = "";
+
+        // Constructor del Builder: solo los campos obligatorios
+        public Builder(String nombre, String rareza,
+                       String ataque, String urlImagen) {
+            this.nombre          = nombre;
+            this.rareza          = rareza;
+            this.ataquePrincipal = ataque;
+            this.urlImagen       = urlImagen;
+        }
+
+        // Métodos fluidos para campos opcionales
+        public Builder biografia(String bio) {
+            this.biografia = bio; return this;
+        }
+        public Builder precioGemas(Double precio) {
+            this.precioGemas = precio; return this;
+        }
+        public Builder tipoRecarga(String tipo) {
+            this.tipoRecarga = tipo; return this;
+        }
+        public Builder danioMaximo(Integer danio) {
+            this.danioMaximo = danio; return this;
+        }
+        public Builder vidaMaxima(Integer vida) {
+            this.vidaMaxima = vida; return this;
+        }
+        public Builder superHabilidad(String super_) {
+            this.superHabilidad = super_; return this;
+        }
+        public Builder gadget(String g) {
+            this.gadget = g; return this;
+        }
+        public Builder starPower(String sp) {
+            this.starPower = sp; return this;
+        }
+
+        // Método terminal: construye el objeto final
+        public Brawler build() {
+            return new Brawler(this);
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={BrawlerService.java -- Uso del Builder para crear brawlers}]
+@Service
+public class BrawlerService {
+
+    @Autowired
+    private BrawlerRepository brawlerRepo;
+
+    public Brawler crearBrawlerDesdeRequest(BrawlerRequest req) {
+
+        // Uso del Builder: fluido, legible, sin constructores largos
+        Brawler brawler = new Brawler.Builder(
+                req.getNombre(),
+                req.getRareza(),
+                req.getAtaquePrincipal(),
+                req.getUrlImagen()
+            )
+            .biografia(req.getBiografia())
+            .precioGemas(req.getPrecioGemas())
+            .tipoRecarga(req.getTipoRecarga())
+            .danioMaximo(req.getDanioMaximo())
+            .vidaMaxima(req.getVidaMaxima())
+            .superHabilidad(req.getSuperHabilidad())
+            .gadget(req.getGadget())
+            .starPower(req.getStarPower())
+            .build();   // <-- Construye el objeto final
+
+        return brawlerRepo.save(brawler);
+    }
+
+    // Ejemplo: crear un brawler solo con campos obligatorios
+    public Brawler crearBrawlerBasico(String nombre) {
+        Brawler brawler = new Brawler.Builder(
+                nombre, "Comun", "Disparo", "default.png"
+            )
+            .build(); // Los opcionales quedan en sus valores por defecto
+
+        return brawlerRepo.save(brawler);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Ejemplo de creaci\'on sin Builder vs. con Builder}]
+// ❌ SIN Builder: constructor telescópico ilegible
+Brawler shelly = new Brawler("Shelly", "Comun",
+    "Escopeta de balas", "shelly.png",
+    "Shelly es la brawler introductoria del juego...",
+    0.0, "Golpes", 1960, 3360,
+    "Cortina de balas",
+    "Blindaje de arcilla",
+    "Cepo de acero");
+
+// ✅ CON Builder: fluido, legible y seguro
+Brawler shelly = new Brawler.Builder(
+        "Shelly", "Comun", "Escopeta de balas", "shelly.png")
+    .biografia("Shelly es la brawler introductoria del juego...")
+    .tipoRecarga("Golpes")
+    .danioMaximo(1960)
+    .vidaMaxima(3360)
+    .superHabilidad("Cortina de balas")
+    .gadget("Blindaje de arcilla")
+    .starPower("Cepo de acero")
+    .build();
+\end{lstlisting}
+
+\subsection{Diagrama del patr\'on Builder}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+  \node[draw=bsDark, fill=bsDark!10, rounded corners, text width=3.5cm, align=center, minimum height=1cm, font=\small\bfseries] (director) at (0,0) {BrawlerService\\(Director)};
+
+  \node[draw=bsOrange, fill=bsOrange!10, rounded corners, text width=3.5cm, align=center, minimum height=1cm, font=\small\bfseries] (builder) at (5,0) {Brawler.Builder\\(Builder)};
+
+  \node[draw=bsGreen, fill=bsGreen!10, rounded corners, text width=3.5cm, align=center, minimum height=1cm, font=\small\bfseries] (product) at (5,-2.5) {Brawler\\(Producto)};
+
+  \draw[->, thick] (director) -- node[above]{\small usa} (builder);
+  \draw[->, thick] (builder) -- node[right]{\small build()} (product);
+
+  % Campos del builder
+  \node[draw=gray!50, fill=gray!5, rounded corners, text width=3.8cm, align=left, font=\scriptsize] (campos) at (10.5,0)
+    {\textbf{Campos opcionales:}\\
+     $\bullet$ biografia()\\
+     $\bullet$ precioGemas()\\
+     $\bullet$ tipoRecarga()\\
+     $\bullet$ danioMaximo()\\
+     $\bullet$ vidaMaxima()\\
+     $\bullet$ superHabilidad()\\
+     $\bullet$ gadget()\\
+     $\bullet$ starPower()};
+  \draw[dashed, gray] (builder) -- (campos);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Ventajas de implementar este patr\'on}
+\begin{itemize}
+  \item Elimina los constructores con m\'ultiples par\'ametros del mismo tipo (propensos a errores de orden).
+  \item El c\'odigo que crea brawlers es autoexplicativo y f\'acil de leer.
+  \item Permite crear brawlers b\'asicos (solo campos obligatorios) o completos (todos los campos) con el mismo Builder.
+  \item Facilita las pruebas unitarias: cada test puede construir exactamente el brawler que necesita.
+\end{itemize}
+
+
+\newpage
+\section{Resumen y Conclusiones}
+
+\subsection{Tabla comparativa de patrones}
+
+\begin{center}
+\begin{tabular}{|>{\bfseries}p{2.8cm}|p{2cm}|p{4cm}|p{4cm}|}
+\hline
+\rowcolor{bsDark!15} Patr\'on & Tipo & Clase principal & Beneficio \\
+\hline
+Singleton & Creacional & DatabaseConnection, JwtUtils & Una sola instancia del recurso \\
+\hline
+Factory Method & Creacional & TweetResponseDTO, JwtResponse & Creaci\'on centralizada de objetos \\
+\hline
+Abstract Factory & Creacional & BrawlerResponseFactory & Familias de objetos por plataforma \\
+\hline
+Builder & Creacional & Brawler.Builder & Construcci\'on fluida de objetos complejos \\
+\hline
+Observer & Comportamiento & Tweet, TweetReactionController & Reacci\'on autom\'atica a cambios \\
+\hline
+Strategy & Comportamiento & WebSecurityConfig, UserDetailsServiceImpl & Algoritmos de seguridad intercambiables \\
+\hline
+Decorator & Estructural & TweetResponseDTO & Enriquecer datos sin modificar la entidad \\
+\hline
+Facade & Estructural & AuthService & Simplifica subsistemas complejos \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Conclusiones}
+
+\begin{tcolorbox}[colback=bsDark!8, colframe=bsOrange, arc=4pt, title={\textbf{Conclusiones finales}}, coltitle=white]
+\begin{itemize}
+  \item Los \textbf{patrones de dise\~no} no son reglas r\'igidas, sino soluciones probadas que se adaptan al contexto del proyecto.
+  \item En el proyecto Brawl Stars, el uso de Spring Boot facilita la implementaci\'on de patrones como \textbf{Singleton} y \textbf{Strategy} de forma nativa a trav\'es del contenedor IoC.
+  \item El patr\'on \textbf{Facade} (AuthService) reduce el acoplamiento entre la capa de presentaci\'on y la l\'ogica de negocio.
+  \item El patr\'on \textbf{Observer} permite que el sistema de likes y comentarios sea extensible sin modificar el c\'odigo existente.
+  \item El \textbf{Abstract Factory} propuesto permitir\'ia dar soporte a m\'ultiples plataformas (m\'ovil, web, tablet) sin duplicar la l\'ogica de los controladores.
+  \item El \textbf{Builder} propuesto elimina los constructores telescópicos al crear brawlers con muchos campos opcionales, haciendo el c\'odigo m\'as legible y mantenible.
+  \item Aplicar estos ocho patrones mejora la \textit{mantenibilidad}, \textit{testabilidad} y \textit{escalabilidad} del sistema, factores cruciales cuando el proyecto crece y nuevos brawlers o funcionalidades son a\~nadidos.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{1cm}
+
+\begin{center}
+{\color{bsOrange}\rule{10cm}{2pt}}\\[0.3cm]
+{\large\bfseries\color{bsDark} Angel Jes\'us Moreno Corona}\\[0.2cm]
+{\color{gray} Patrones de Dise\~no de Software -- 2026}\\[0.3cm]
+{\color{bsOrange}\rule{10cm}{2pt}}
+\end{center}
+
+\end{document}
